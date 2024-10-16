@@ -1,14 +1,16 @@
 import { useForm } from 'react-hook-form';
+import Error from './Error';
+import { DraftPatient } from '../types';
 
 export default function PatientForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<DraftPatient>();
 
-  const registerPatient = () => {
-    console.log('Registrando Paciente');
+  const registerPatient = (data: DraftPatient) => {
+    console.log('Registrando Paciente', data);
   };
 
   return (
@@ -36,13 +38,11 @@ export default function PatientForm() {
             placeholder='Nombre del Paciente'
             {...register('name', {
               required: 'El nombre es obligatorio',
-              maxLength: { value: 80, message: 'Máximo 80 caracteres' },
+              maxLength: { value: 50, message: 'Máximo 50 caracteres' },
             })}
           />
 
-          {errors.name && (
-            <span className='text-red-500 text-sm'>{errors.name.message}</span>
-          )}
+          {errors.name && <Error>{errors.name.message}</Error>}
         </div>
 
         <div className='mb-5'>
@@ -54,7 +54,12 @@ export default function PatientForm() {
             className='w-full p-3  border border-gray-100'
             type='text'
             placeholder='Nombre del Propietario'
+            {...register('caretaker', {
+              required: 'El propietario es obligatorio',
+            })}
           />
+
+          {errors.caretaker && <Error>{errors.caretaker.message}</Error>}
         </div>
 
         <div className='mb-5'>
@@ -66,7 +71,16 @@ export default function PatientForm() {
             className='w-full p-3  border border-gray-100'
             type='email'
             placeholder='Email de Registro'
+            {...register('email', {
+              required: 'El Email es Obligatorio',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Email No Válido',
+              },
+            })}
           />
+
+          {errors.email && <Error>{errors.email.message}</Error>}
         </div>
 
         <div className='mb-5'>
@@ -77,7 +91,12 @@ export default function PatientForm() {
             id='date'
             className='w-full p-3  border border-gray-100'
             type='date'
+            {...register('date', {
+              required: 'La fecha es obligatoria',
+            })}
           />
+
+          {errors.date && <Error>{errors.date.message}</Error>}
         </div>
 
         <div className='mb-5'>
@@ -88,7 +107,12 @@ export default function PatientForm() {
             id='symptoms'
             className='w-full p-3  border border-gray-100'
             placeholder='Síntomas del paciente'
+            {...register('symptoms', {
+              required: 'Los síntomas son obligatorios',
+            })}
           ></textarea>
+
+          {errors.symptoms && <Error>{errors.symptoms.message}</Error>}
         </div>
 
         <input

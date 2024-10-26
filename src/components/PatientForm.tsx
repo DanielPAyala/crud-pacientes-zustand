@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 export default function PatientForm() {
   // usePatientStore hook
-  const { addPatient, activeId, patients } = usePatientStore();
+  const { addPatient, activeId, patients, updatePatient } = usePatientStore();
 
   // useForm hook
   const {
@@ -30,7 +30,7 @@ export default function PatientForm() {
 
   // Register
   const registerPatient = (data: DraftPatient) => {
-    addPatient(data);
+    activeId ? updatePatient(data) : addPatient(data);
     reset();
   };
 

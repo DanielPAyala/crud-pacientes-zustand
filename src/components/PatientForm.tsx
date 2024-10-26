@@ -11,7 +11,14 @@ export default function PatientForm() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<DraftPatient>();
+  } = useForm<DraftPatient>({
+    defaultValues: {
+      name: 'Hooks',
+      caretaker: 'Carlos',
+      email: 'carlos@gmail.com',
+      symptoms: 'Dolor de Cabeza',
+    },
+  });
 
   const registerPatient = (data: DraftPatient) => {
     console.log('Registrando Paciente', data);
@@ -100,6 +107,7 @@ export default function PatientForm() {
             {...register('date', {
               required: 'La fecha es obligatoria',
             })}
+            defaultValue={new Date().toISOString().split('T')[0]}
           />
 
           {errors.date && <Error>{errors.date.message}</Error>}

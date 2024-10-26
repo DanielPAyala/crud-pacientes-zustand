@@ -8,6 +8,7 @@ type PatientDetailsProps = {
 
 export default function PatientDetails({ patient }: PatientDetailsProps) {
   const deletePatient = usePatientStore((state) => state.deletePatient);
+  const getPatientById = usePatientStore((state) => state.getPatientById);
 
   return (
     <div className='mx-5 my-10 px-5 py-10 bg-white shadow-md rounded-xl'>

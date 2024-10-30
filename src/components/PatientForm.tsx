@@ -3,6 +3,7 @@ import Error from './Error';
 import { DraftPatient } from '../types';
 import { usePatientStore } from '../store/store';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export default function PatientForm() {
   // usePatientStore hook
@@ -30,7 +31,13 @@ export default function PatientForm() {
 
   // Register
   const registerPatient = (data: DraftPatient) => {
-    activeId ? updatePatient(data) : addPatient(data);
+    if (activeId) {
+      updatePatient(data);
+      toast.success('Paciente Actualizado');
+    } else {
+      addPatient(data);
+      toast.success('Paciente Registrado');
+    }
     reset();
   };
 

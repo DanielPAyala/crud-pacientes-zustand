@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { DraftPatient, Patient } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -17,34 +17,42 @@ const createPatient = (patient: DraftPatient): Patient => {
 };
 
 export const usePatientStore = create<PatientState>()(
-  devtools((set) => ({
-    patients: [],
-    activeId: '',
-    addPatient: (data) => {
-      const newPatient = createPatient(data);
-      set((state) => ({
-        patients: [...state.patients, newPatient],
-      }));
-    },
-    deletePatient: (id) => {
-      set((state) => ({
-        patients: state.patients.filter((patient) => patient.id !== id),
-      }));
-    },
-    getPatientById: (id) => {
-      set(() => ({
-        activeId: id,
-      }));
-    },
-    updatePatient: (data) => {
-      set((state) => ({
-        patients: state.patients.map((patient) =>
-          patient.id === state.activeId
-            ? { ...data, id: state.activeId }
-            : patient
-        ),
+  devtools(
+    persist(
+      (set) => ({
+        patients: [],
         activeId: '',
-      }));
-    },
-  }))
+        addPatient: (data) => {
+          const newPatient = createPatient(data);
+          set((state) => ({
+            patients: [...state.patients, newPatient],
+          }));
+        },
+        deletePatient: (id) => {
+          set((state) => ({
+            patients: state.patients.filter((patient) => patient.id !== id),
+          }));
+        },
+        getPatientById: (id) => {
+          set(() => ({
+            activeId: id,
+          }));
+        },
+        updatePatient: (data) => {
+          set((state) => ({
+            patients: state.patients.map((patient) =>
+              patient.id === state.activeId
+                ? { ...data, id: state.activeId }
+                : patient
+            ),
+            activeId: '',
+          }));
+        },
+      }),
+      {
+        name: 'patient-storage',
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
+  )
 );
